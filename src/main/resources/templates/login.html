@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|${pageName}|">Your Page Title</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+        }
+
+        h1 a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .login-links a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #4285f4;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .login-links a:hover {
+            background-color: #3367d6;
+        }
+
+        .error-class {
+            color: red;
+        }
+
+        .error-input {
+            border-color: red;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1><a th:href="|/${loginType}|">[[${pageName}]]</a></h1>
+    <hr />
+</header>
+
+<div>
+    <h2>로그인</h2>
+    <div class="login-links">
+        <a href="/oauth2/authorization/google">구글 로그인</a>
+        <a href="/oauth2/authorization/kakao">카카오 로그인</a>
+        <a href="/oauth2/authorization/naver">네이버 로그인</a>
+        <a href="/oauth2/authorization/facebook">페이스북 로그인</a>
+    </div>
+</div>
+</body>
+
+</html>

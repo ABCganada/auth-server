@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Set Your Nickname</title>
+  <style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        text-align: center;
+    }
+
+    h2 {
+        color: #333;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #4285f4;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #3367d6;
+    }
+
+    .error-message {
+        color: #ff0000; /* Red color for error messages */
+        font-size: 14px; /* Adjust font size as needed */
+        margin-top: 5px; /* Add some space above the error messages */
+    }
+  </style>
+</head>
+
+<body>
+
+<form th:action="@{/security-login/set-nickname}" th:object="${nicknameDto}" method="post">
+  <h2>Set Your Nickname</h2>
+  <label for="nickname">Nickname:</label>
+  <input type="text" id="nickname" name="nickname" th:field="*{nickname}" required>
+  <br>
+  <!-- Display improved error messages with highlighting -->
+  <div th:if="${#fields.hasErrors('nickname')}" class="error-message">
+    <p th:each="error : ${#fields.errors('nickname')}" th:text="${error}"></p>
+  </div>
+  <br>
+  <button type="submit">Submit</button>
+</form>
+
+</body>
+
+</html>
