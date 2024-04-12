@@ -1,10 +1,10 @@
 package com.login.oauthAndJwt.auth.jwt;
 
 import com.login.oauthAndJwt.auth.oauth.CustomOAuth2User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.nimbusds.jwt.JWT;
+import io.jsonwebtoken.*;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
+@Slf4j
 @Getter
 @Service
 public class JwtService {
@@ -63,6 +64,22 @@ public class JwtService {
         cookie.setMaxAge(30 * 60);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
+        cookie.setDomain("localhost");
         response.addCookie(cookie);
+    }
+
+    public boolean isValid(String token) {
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("잘못된 토큰입니다.");
+        }
+
+        return false;
     }
 }

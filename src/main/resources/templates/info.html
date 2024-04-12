@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title th:text="|${pageName}|">Your Page Title</title>
+    <title th:text="|${pageName}|">유저 정보</title>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -49,7 +49,7 @@
 <body>
 
 <div class="container">
-    <h1><a th:href="|/${loginType}|">[[${pageName}]]</a></h1>
+    <h1><a th:href="@{http://localhost:8000/main}">[[${pageName}]]</a></h1>
     <hr />
     <h2>유저 정보</h2>
     <div class="user-info">

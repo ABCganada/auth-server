@@ -69,7 +69,7 @@
 
 <body>
 
-<form th:action="@{/security-login/set-nickname}" th:object="${nicknameDto}" method="post">
+<form th:action="@{/auth/set-nickname}" th:object="${nicknameDto}" method="post">
   <h2>Set Your Nickname</h2>
   <label for="nickname">Nickname:</label>
   <input type="text" id="nickname" name="nickname" th:field="*{nickname}" required>

@@ -37,7 +37,7 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
                     jwtService.sendCookie(response, oAuthUser);
                     response.setStatus(HttpServletResponse.SC_CREATED);
-                    response.sendRedirect("/security-login/set-nickname");
+                    response.sendRedirect("/auth/set-nickname");
                     return;
                 }
 
@@ -48,7 +48,7 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
                 user.updateNickname(nickname);
                 userRepository.save(user);
 
-                getRedirectStrategy().sendRedirect(request, response, "/security-login/set-nickname");
+                getRedirectStrategy().sendRedirect(request, response, "/auth/set-nickname");
             } else {
                 loginSuccess(response, oAuthUser);
             }
@@ -62,7 +62,7 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         response.setStatus(HttpServletResponse.SC_OK);
         jwtService.sendCookie(response, oAuthUser);
-        response.sendRedirect("/security-login");
+        response.sendRedirect("http://localhost:8000/main");
     }
 
     private String handleNicknameInput(HttpServletRequest request) {

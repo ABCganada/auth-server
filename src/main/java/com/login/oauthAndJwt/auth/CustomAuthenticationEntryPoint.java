@@ -13,7 +13,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         if (!request.getRequestURI().contains("api")) {
-            response.sendRedirect("/security-login/authentication-fail");
+            response.sendRedirect("/auth/authentication-fail");
         }
     }
 }

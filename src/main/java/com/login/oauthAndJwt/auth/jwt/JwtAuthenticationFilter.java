@@ -3,6 +3,7 @@ package com.login.oauthAndJwt.auth.jwt;
 import com.login.oauthAndJwt.domain.entity.User;
 import com.login.oauthAndJwt.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,6 +27,7 @@ import java.util.List;
  * 토큰 있으면 SecurityContextHolder에 저장
  * 토큰 없으면 authentication 저장 없음
  * */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -35,7 +37,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        System.out.println("jwt filter operation");
+        log.info("jwt filter operation");
+
+        if (request.getRequestURI().equals("/auth/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         Cookie cookieToken = Arrays.stream(request.getCookies())
                 .filter(cookie -> cookie.getName().equals("jwtToken"))
@@ -53,10 +60,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = cookieToken.getValue();
+
         /**
          * Validation2
          * 토큰이 유효한가?
          * */
+        if (!jwtService.isValid(token)) {
+            System.out.println(">> >> >> 토큰 이상");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (jwtService.isExpired(token)) {
             System.out.println(">> >> >> 토큰 만료!");
             filterChain.doFilter(request, response);

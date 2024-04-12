@@ -13,7 +13,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         if (!request.getRequestURI().contains("api")) {
-            response.sendRedirect("/security-login/authorization-fail");
+            response.sendRedirect("/auth/authorization-fail");
         }
     }
 }

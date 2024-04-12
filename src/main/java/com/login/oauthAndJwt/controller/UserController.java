@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/security-login")
+@RequestMapping("/auth")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping(value = {"", "/"})
     public String home(Model model, Authentication auth) {
-        model.addAttribute("loginType", "security-login");
-        model.addAttribute("pageName", "Security Token 화면 로그인");
+        model.addAttribute("loginType", "main");
+        model.addAttribute("pageName", "Sandwich AI");
 
         System.out.println("Controller, 홈 화면");
 
@@ -39,22 +39,27 @@ public class UserController {
 
     @GetMapping("/sign-up")
     public String signUpPage(Model model) {
-        model.addAttribute("loginType", "security-login");
-        model.addAttribute("pageName", "Security 로그인");
+        model.addAttribute("loginType", "main");
+        model.addAttribute("pageName", "Sandwich AI");
 
         return "signUp";
     }
 
     @GetMapping("/login")
     public String loginPage(Model model) {
-        model.addAttribute("loginType", "security-login");
-        model.addAttribute("pageName", "Security 로그인");
+        model.addAttribute("loginType", "main");
+        model.addAttribute("pageName", "Sandwich AI");
 
         return "login";
     }
 
     @GetMapping("/set-nickname")
     public String setNicknamePage(Authentication auth, Model model) {
+        if (auth == null || !auth.isAuthenticated()) {
+            // 사용자가 로그인되지 않은 경우 로그인 페이지로 리디렉션
+            return "redirect:/login";
+        }
+
         User user = userService.getUser(Long.valueOf(auth.getName()));
 
         if (user.getRole() == UserRole.GUEST) {
@@ -62,7 +67,7 @@ public class UserController {
             return "setNickname";
         }
 
-        return "redirect:/security-login";
+        return "redirect:http://localhost:8000/main";
     }
 
     @PostMapping("/set-nickname")
@@ -78,19 +83,19 @@ public class UserController {
             userService.updateGuestToUser(user.getId(), nicknameDto.getNickname());
         }
 
-        return "redirect:/security-login";
+        return "redirect:http://localhost:8000/main";
     }
 
     @GetMapping("/info")
     public String userInfo(Model model, Authentication auth) {
-        model.addAttribute("loginType", "security-login");
-        model.addAttribute("pageName", "Security 로그인");
+        model.addAttribute("loginType", "main");
+        model.addAttribute("pageName", "Sandwich AI");
 
         User user = userService.getUser(Long.parseLong(auth.getName()));
         System.out.println(">> " + user);
 
         if (user == null) {
-            return "redirect:/security-login/login";
+            return "redirect:/auth/login";
         }
 
         model.addAttribute("user", user);
@@ -100,8 +105,8 @@ public class UserController {
 
     @GetMapping("/admin")
     public String adminPage(Model model) {
-        model.addAttribute("loginType", "security-login");
-        model.addAttribute("pageName", "Security 로그인");
+        model.addAttribute("loginType", "main");
+        model.addAttribute("pageName", "Sandwich AI");
 
         return "admin";
     }

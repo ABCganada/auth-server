@@ -3,6 +3,7 @@ package com.login.oauthAndJwt.config;
 import com.login.oauthAndJwt.auth.CustomAccessDeniedHandler;
 import com.login.oauthAndJwt.auth.CustomAuthenticationEntryPoint;
 import com.login.oauthAndJwt.auth.jwt.JwtAuthenticationFilter;
+import com.login.oauthAndJwt.auth.oauth.CustomLogoutHandler;
 import com.login.oauthAndJwt.auth.oauth.CustomOauth2UserService;
 import com.login.oauthAndJwt.auth.oauth.SuccessHandler;
 import com.login.oauthAndJwt.domain.entity.UserRole;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig  {
 
+    private final CustomLogoutHandler customLogoutHandler;
     private final SuccessHandler successHandler;
     private final CustomOauth2UserService customOauth2UserService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -32,23 +34,24 @@ public class SecurityConfig  {
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("security-login/set-nickname").hasAuthority(UserRole.GUEST.name())
+                .antMatchers("/auth/set-nickname").hasAuthority(UserRole.GUEST.name())
                 //인증
-                .antMatchers("/security-login/info").authenticated()
+                .antMatchers("/auth/info").authenticated()
                 //인가
-                .antMatchers("/security-login/admin/**").hasAuthority(UserRole.ADMIN.name())
+                .antMatchers("/auth/admin/**").hasAuthority(UserRole.ADMIN.name())
                 .anyRequest().permitAll()
 
                 .and()
                 .logout()
-                .logoutUrl("/security-login/logout")
+                .logoutUrl("/auth/logout")
+                .addLogoutHandler(customLogoutHandler)
                 .invalidateHttpSession(true).deleteCookies("JSESSIONID", "jwtToken")
 
                 //OAuth
                 .and()
                 .oauth2Login()
-                .loginPage("/security-login/login")
-                .defaultSuccessUrl("/security-login")
+                .loginPage("/auth/login")
+                .defaultSuccessUrl("http://localhost:8081/main")
                 .successHandler(successHandler)
                 .userInfoEndpoint().userService(customOauth2UserService);
 
