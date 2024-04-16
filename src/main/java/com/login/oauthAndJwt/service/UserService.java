@@ -135,4 +135,15 @@ public class UserService {
     public boolean isDuplicated(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
+
+    public boolean deleteUser(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            userRepository.delete(user);
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -56,8 +56,27 @@
         <div th:text="|Login ID: ${user.loginId}|"></div>
         <div th:text="|Nickname: ${user.nickname}|"></div>
         <div th:text="|Role: ${user.role}|"></div>
+        <button class="btn btn-danger" th:attr="onclick=|deleteUser()|">회원 탈퇴</button>
     </div>
 </div>
+
+<script>
+    function deleteUser() {
+        if(confirm("Are you sure you want to delete your information all?")) {
+            fetch(`/auth/exit`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if(response.ok) {
+                    location.reload();
+                } else {
+                    console.error('Failed to delete user');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    }
+</script>
 
 </body>
 

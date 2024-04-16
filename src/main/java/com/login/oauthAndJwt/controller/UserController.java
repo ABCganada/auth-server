@@ -5,6 +5,7 @@ import com.login.oauthAndJwt.domain.entity.User;
 import com.login.oauthAndJwt.domain.entity.UserRole;
 import com.login.oauthAndJwt.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +13,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -101,6 +105,38 @@ public class UserController {
         model.addAttribute("user", user);
 
         return "info";
+    }
+
+    @DeleteMapping("/exit")
+    public String memberExit(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        Long userId = null;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("userId")) {
+                    try {
+                        userId = Long.valueOf(cookie.getValue());
+                    } catch (NumberFormatException e) {
+                        log.error("Invalid user id in cookie", e);
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (userId == null) {
+            log.info("user id가 쿠키에 없음");
+            return "redirect:http://localhost:8000/main";
+        }
+
+        boolean success = userService.deleteUser(userId);
+
+        if (success) {
+            log.info("delete user successful");
+            return "redirect:http://localhost:8000/main";
+        }
+
+        return "redirect:http://localhost:8000/main";
     }
 
     @GetMapping("/admin")
